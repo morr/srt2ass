@@ -63,7 +63,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
 
 
 ass_line = 'Dialogue: 0,\1.\2,\3.\4,Default,,0000,0000,0000,,\5'+"{ENDOFTEXT}\n"+'\6'
-srt_line = /^\d+\n(\d\d:\d\d:\d\d),(\d\d)\d --> (\d\d:\d\d:\d\d),(\d\d)\d(?:  SSA.*)?\n([\s\S]+?)\n(^\d+\n\d\d:\d\d:\d\d)/
+srt_line = /^\d+\n(\d\d:\d\d:\d\d),(\d\d)\d[\ ]?-->[\ ]?(\d\d:\d\d:\d\d),(\d\d)\d(?:  SSA.*)?\n([\s\S]+?)\n(^\d+\n\d\d:\d\d:\d\d)/
 
 
 # get files
@@ -85,7 +85,7 @@ Dir.foreach(dir) do |f|
     end
   end
   if mask
-    new_filename = (dir == "." ? "" : dir)+f.sub(/\.srt$/ ,'').sub(/.*(\d{4}|\d{3}|\d{2}).*/, mask)
+    new_filename = (dir == "." ? "" : dir)+f.sub(/\.srt$/ ,'').sub(/.*\b(\d{4}|\d{3}|\d{2})\b.*/, mask)
     new_filename = new_filename+".ass" unless new_filename.match(/\.ass$/)
   else
     new_filename = dir+'/'+f.sub(/\.srt$/, '.ass')
@@ -93,5 +93,3 @@ Dir.foreach(dir) do |f|
   p new_filename
   File.open(new_filename, 'w') {|file| file << ass_header << data.gsub(/\n0\n00:00:00$/m, '') }
 end
-
-#puts %x(subdownloader --cli --human --sol --video=#{directory} --lang=#{language})
